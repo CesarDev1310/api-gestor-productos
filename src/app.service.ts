@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Producto } from './productos/entities/producto.entity';
+import { ProductoDto } from './productos/dtos/producto.dto';
 
 @Injectable()
 export class AppService {
@@ -30,14 +31,36 @@ export class AppService {
   }
 
   //C- Metodo POST (crear elementos)
-  createProducto(): void {
-    
+  createProducto(producto : ProductoDto): Producto {
+    const nuevoProducto : Producto = {
+      id: Math.random().toString(),
+      nombre: producto.nombre,
+      precio: producto.precio,
+      enStock: producto.enStock,
+      fechaCreacion: new Date(),
+    };
+
+    this.baseDeDatos.push(nuevoProducto);
+    return nuevoProducto;
   }
 
   //U- Metodo PUT (actualizar elementos)
-
+  updateProducto(id:string, productoActualizado : ProductoDto) : Producto {
+    const existeProducto = this.getProducto(id);
+    const indiceProducto = this.baseDeDatos.findIndex(p=> p.id == id);
+    this.baseDeDatos[indiceProducto] = {
+      ...existeProducto,
+      ...productoActualizado
+    }
+    return this.baseDeDatos[indiceProducto]
+  }
 
   //D- Metodo DELETE (eliminar elementos)
+  deleteProducto(id: string) : Producto[] {
+    this.getProducto(id);
+    this.baseDeDatos = this.baseDeDatos.filter(p=> p.id != id);
 
+    return this.getProductos();
+  }
   
 }
