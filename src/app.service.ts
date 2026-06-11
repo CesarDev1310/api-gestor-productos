@@ -30,7 +30,9 @@ export class AppService {
   }
 
   //C- Metodo POST (crear elementos)
-  
+  createProducto(): void {
+    
+  }
 
   //U- Metodo PUT (actualizar elementos)
 
