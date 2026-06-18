@@ -10,35 +10,36 @@ export class AppController {
 
   //listar productos  
   @Get()
-  getProductos(): Producto[] {
-    return this.appService.getProductos();
+  async getProductos(): Promise<Producto[]>  {
+    return await this.appService.getProductos();
   }
 
   //listar un producto
   @Get(':id')
-  getProducto( @Param('id') id : string ): Producto {
-    return this.appService.getProducto(id);
+  async getProducto( @Param('id') id : string ): Promise<Producto>  {
+    return await this.appService.getProducto(id);
   }
 
   //Crear producto  
   @UseGuards(AuthGuard)
   @Post()
-  createProducto(@Body() producto : ProductoDto): Producto{
-    return this.appService.createProducto(producto);
+  async createProducto(@Body() producto : ProductoDto): Promise<Producto> {
+    return await this.appService.createProducto(producto);
   }
 
   //Actualizar Producto
   @UseGuards(AuthGuard)
   @Post(':id')
-  updateProducto(@Param('id') id: string, @Body() producto : ProductoDto ): Producto{
-    return this.appService.updateProducto(id, producto);
+  async updateProducto(@Param('id') id: string, @Body() producto : ProductoDto ): Promise<Producto> {
+    return await this.appService.updateProducto(id, producto);
   }
 
   //Eliminar producto
+  
   @UseGuards(AuthGuard)
   @Delete(':id')
-  deleteProducto(@Param('id') id: string) : Producto[]{
-    return this.appService.deleteProducto(id);
+  async deleteProducto(@Param('id') id: string) : Promise<Producto[]>{
+    return await this.appService.deleteProducto(id);
   }
 
 }
