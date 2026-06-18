@@ -1,11 +1,14 @@
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { JwtService } from '@nestjs/jwt';
 import { Request } from "express";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
 
-    constructor(private JwtService: JwtService) { }
+    constructor(
+        private JwtService: JwtService,
+        private configService: ConfigService) { }
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
 
@@ -17,10 +20,11 @@ export class AuthGuard implements CanActivate {
         }
 
         try {
+            const secretoEnv = this.configService.get<string>('JWT_SECRET')
             const payload = await this.JwtService.verifyAsync(
                 token,
                 {
-                    secret: 'llave_secreta@12456789'
+                    secret: secretoEnv
                 }
             );
 
@@ -29,7 +33,7 @@ export class AuthGuard implements CanActivate {
         } catch {
             throw new UnauthorizedException('El token es invalido o ha expirado')
         }
-        
+
         return true; // El vigilante te da acceso
     }
 
